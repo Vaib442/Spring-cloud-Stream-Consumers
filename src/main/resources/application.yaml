@@ -1,0 +1,43 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, bindings
+  server:
+    servlet:
+      context-path: /springCloudStreamConsumer
+server:
+  servlet:
+    context-path: /springCloudStreamConsumer
+
+spring:
+  cloud:
+    stream:
+      bindings:
+        kinesisSink-in-0:
+          name: kinesisSink-in-0
+          destination: test_input_stream
+          group: test_input_stream_records
+          content-type: application/json
+      kinesis:
+        binder:
+          kplKclEnabled: true
+        bindings:
+          kinesisSink-in-0:
+            consumer:
+              listenerMode: record
+              checkpointMode: manual
+              shardIteratorType: LATEST
+    function:
+      definition: kinesisSink
+
+cloud:
+  aws:
+    credentials:
+      access-key: <PROVIDE YOUR ACCESS KEY >
+      secret-key: <PROVIDE YOUR SECRET KEY>
+    region:
+      static: <PROVIDE YOUR REGION>
+      auto: false
+    stack:
+      auto: false
